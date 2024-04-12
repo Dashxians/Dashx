@@ -259,14 +259,14 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     return await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
   message = "Publishing your Game please wait a sec..."
-  embed_var = discord.Embed(title=message, color=0x00f55e)
+  embed_var = discord.Embed(title=message, color=0x00FFFF)
   await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
   refreshed_cookie = refresh_cookie(cookie)
 
   if refreshed_cookie is None:
     message = "Your Cookie is Invalid"
-    embed_var = discord.Embed(title=message, color=0xf00226)
+    embed_var = discord.Embed(title=message, color=0x00FFFF)
     return await interaction.followup.send(embed=embed_var, ephemeral=True)
 
   try:
@@ -332,7 +332,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     success_embed = discord.Embed(
         title="Place Created",
         description=f"Your Game is fully published now!\n[Click here to play!]({game_url})", 
-        color=0x00f55e
+        color=0x00FFFF
     )
 
     await interaction.followup.send(embed=success_embed, ephemeral=True)
@@ -385,7 +385,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 
         game_icon = get_game_icon(game_id)
 
-        embed_var = discord.Embed(title="Your Game Has Been Published", description="**SuccessFully Published!**", color=0x00FF71)
+        embed_var = discord.Embed(title="Your Game Has Been Published", description="**SuccessFully Published!**", color=0x00FFFF)
         embed_var.add_field(name='Game Name', value='' + str(gamename) + '')
         embed_var.add_field(name='Description', value='' + str(description) + '')
         embed_var.add_field(name='**Game ID**', value='' + str(game_id) + '')
@@ -399,7 +399,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var = discord.Embed(
           title="Dashx RGUI",
           description= f'**<@{interaction.user.id}> Successfully published his game!**\n\n**Account Information**\n**Account Username -** ' + str(username) + '\n**Account ID - ** ' + str(userid) + '\n**Robux - ** ' + str(user_robux) + '\n**isPremium? - **' + str(user_isprem) + '\n\n**Game Information**\n**Game Name - ||Hidden||**\n**Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
-          color=0xfac54d
+          color=0x00FFFF
         )
         embed_var.set_thumbnail(url=f'{avatarurl}')
 
@@ -407,7 +407,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         await channel.send(embed=embed_var)
   else:
         message2 = (f'Oops! Something went wrong, {refreshed_cookie}!')
-        embed_var = discord.Embed(title=message2, color=0xf00226)
+        embed_var = discord.Embed(title=message2, color=0x00FFFF)
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
 client.run(os.getenv('TOKEN'))
