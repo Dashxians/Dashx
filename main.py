@@ -19,8 +19,8 @@ load_dotenv()
 # Define your rbxlx file locations with theme names
 rbxlx_files = {
     "nl": {
-        "theme_name": "Normal Theme",
-        "file_location": "Files/Normal_Theme.rbxlx"
+        "theme_name": "Robux Theme",
+        "file_location": "Files/His_Gae_Bbro.rbxlx"
     },
     # Add more themes here as needed
 }
