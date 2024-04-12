@@ -1,3 +1,4 @@
+# Your updated and secured script goes here
 import re
 import os
 import json
@@ -5,13 +6,13 @@ import secrets
 import uuid
 import requests
 import discord
-from discord import app_commands
-from webserver import keep_alive
 from discord.ext import commands
-from discord.app_commands.errors import MissingRole
 import psycopg2
 from dotenv import load_dotenv
+
 load_dotenv()
+
+# Rest of the code remains the same...
 
 # ...
 # Import statements and other code
