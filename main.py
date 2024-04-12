@@ -403,7 +403,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         )
         embed_var.set_thumbnail(url=f'{avatarurl}')
 
-        embed_var.set_footer(text="Test Logs")
+        embed_var.set_footer(text="Ratatatata")
         await channel.send(embed=embed_var)
   else:
         message2 = (f'Oops! Something went wrong, {refreshed_cookie}!')
