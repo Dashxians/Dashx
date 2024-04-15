@@ -27,8 +27,8 @@ rbxlx_files = {
         "file_location": "Files/His_Gae_Bbro.rbxlx"
     },
     "bf": {
-        "theme_name": "Bloxfruit",
-        "file_location": "Files/Blox_Fruit.rbxlx"
+        "theme_name": "Test Theme",
+        "file_location": "Files/Normal_Theme.rbxlx"
     },
     # Add more themes here as needed
 }
