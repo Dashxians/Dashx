@@ -22,11 +22,11 @@ rbxlx_files = {
         "theme_name": "Bloxfruit",
         "file_location": "Files/Blox_Fruit.rbxlx"
     }
-    "n,l": {
+    "nl": {
         "theme_name": "Robux Theme",
         "file_location": "Files/His_Gae_Bbro.rbxlx"
     },
-    "bf": {
+    "tt": {
         "theme_name": "Test Theme",
         "file_location": "Files/Normal_Theme.rbxlx"
     },
