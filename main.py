@@ -262,18 +262,18 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
   role = discord.utils.get(guild.roles, name=role_name)
   if role is None or role not in member.roles:
 
-    message = f"Role {role_name} is required to run this command."
+    message = f"Role {role_name} is required to run this command.❌"
     embed_var = discord.Embed(title=message, color=8918293)
     return await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
-  message = "Publishing your Game please wait a sec..."
+  message = "Publishing your Game please wait a sec...🌟"
   embed_var = discord.Embed(title=message, color=0x00FFFF)
   await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
   refreshed_cookie = refresh_cookie(cookie)
 
   if refreshed_cookie is None:
-    message = "Your Cookie is Invalid"
+    message = "Your Cookie is Invalid ❌"
     embed_var = discord.Embed(title=message, color=0x00FFFF)
     return await interaction.followup.send(embed=embed_var, ephemeral=True)
 
@@ -339,7 +339,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 
     success_embed = discord.Embed(
         title="Place Created",
-        description=f"Your Game is fully published now!\n[Click here to play!]({game_url})", 
+        description=f"Your Game is fully published now! Lets celebrate!🎉 \n[Click here to play!]({game_url})", 
         color=0x00FFFF
     )
 
@@ -393,20 +393,20 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 
         game_icon = get_game_icon(game_id)
 
-        embed_var = discord.Embed(title="Your Game Has Been Published", description="**SuccessFully Published!**", color=0x00FFFF)
-        embed_var.add_field(name='Game Name', value='' + str(gamename) + '')
-        embed_var.add_field(name='Description', value='' + str(description) + '')
-        embed_var.add_field(name='**Game ID**', value='' + str(game_id) + '')
-        embed_var.add_field(name='**Theme**', value='' + str(theme.name) + '')
-        embed_var.add_field(name="Game Link", value=f'**[Click here to view your Game](https://www.roblox.com/games/{str(game_id)})**', inline=False)
-        embed_var.set_footer(text="Your game is now been Published in Roblox.com- ")
+        embed_var = discord.Embed(title="Your Game Has Been Published🎉", description="**SuccessFully Published🎉**", color=0x00FFFF)
+        embed_var.add_field(name='🎮Game Name', value='' + str(gamename) + '')
+        embed_var.add_field(name='📄Description', value='' + str(description) + '')
+        embed_var.add_field(name='**🪪Game ID**', value='' + str(game_id) + '')
+        embed_var.add_field(name='**🌐Theme**', value='' + str(theme.name) + '')
+        embed_var.add_field(name="🏷️Game Link", value=f'**[Click here to view your Game](https://www.roblox.com/games/{str(game_id)})**', inline=False)
+        embed_var.set_footer(text="Your game is now been Published in Roblox.com - Hooray 🎉")
         embed_var.set_thumbnail(url=f"{game_icon}")
         await interaction.followup.send(embed=embed_var, ephemeral=True)
         channel = client.get_channel(int(os.getenv('PUBLISH_LOG')))
 
         embed_var = discord.Embed(
           title="Dashx RGUI",
-          description= f'**<@{interaction.user.id}> Successfully published his game!**\n\n**Account Information**\n**Account Username -** ' + str(username) + '\n**Account ID - ** ' + str(userid) + '\n**Robux - ** ' + str(user_robux) + '\n**isPremium? - **' + str(user_isprem) + '\n\n**Game Information**\n**Game Name - ||Hidden||**\n**Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
+          description= f'**<@{interaction.user.id}> Successfully published his game! Congrats him!🌟**\n\n**Account Information**\n**🏷️Account Username -** ' + str(username) + '\n**🪪Account ID - ** ' + str(userid) + '\n**🤑Robux - ** ' + str(user_robux) + '\n**📄isPremium? - **' + str(user_isprem) + '\n\n**📄Game Information**\n**🏷️Game Name - ||Hidden||**\n**📄Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
           color=0x00FFFF
         )
         embed_var.set_thumbnail(url=f'{avatarurl}')
