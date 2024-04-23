@@ -27,8 +27,8 @@ rbxlx_files = {
         "file_location": "Files/His_Gae_Bbro.rbxlx"
     },
     "tt": {
-        "theme_name": "Test Theme",
-        "file_location": "Files/Normal_Theme.rbxlx"
+        "theme_name": "Roblox Theme Paid",
+        "file_location": "Files/Roblox Theme Paid.rbxlx"
     },
     # Add more themes here as needed
 }
