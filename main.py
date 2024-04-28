@@ -29,7 +29,7 @@ rbxlx_files = {
     "tt": {
         "theme_name": "Roblox Theme Paid",
         "file_location": "Files/Roblox Theme Paid.rbxlx"
-    }
+    }, 
     "ps": {
         "theme_name": "Pet Sim Theme Paid",
         "file_location": "Files/Pet_Sim_Theme.rbxlx"
