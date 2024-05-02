@@ -27,8 +27,12 @@ rbxlx_files = {
         "file_location": "Files/Pet_Sim_Theme (1).rbxlx"
     },
     "rs": {
-        "theme_name": "Pet Sim Theme Paid",
+        "theme_name": "Robux Theme V2 Paid",
         "file_location": "Files/Robux Theme Paid V2.rbxlx"
+    },
+    "bg": {
+        "theme_name": "Adopt Me Theme V2 Paid",
+        "file_location": "Files/AdopT.rbxlx"
     },
     # Add more themes here as needed
 }
