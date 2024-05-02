@@ -18,21 +18,13 @@ load_dotenv()
 
 # Define your rbxlx file locations with theme names
 rbxlx_files = {
-    "bf": {
-        "theme_name": "Bloxfruit",
-        "file_location": "Files/Blox_Fruit.rbxlx"
-    },
-    "nl": {
-        "theme_name": "Robux Theme",
-        "file_location": "Files/His_Gae_Bbro.rbxlx"
-    },
     "tt": {
         "theme_name": "Roblox Theme Paid",
         "file_location": "Files/Roblox Theme Paid.rbxlx"
     }, 
     "ps": {
         "theme_name": "Pet Sim Theme Paid",
-        "file_location": "Files/Pet_Sim_Theme.rbxlx"
+        "file_location": "Files/Pet_Sim_Theme (1).rbxlx"
     },
     # Add more themes here as needed
 }
