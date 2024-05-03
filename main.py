@@ -34,6 +34,10 @@ rbxlx_files = {
         "theme_name": "Adopt Me",
         "file_location": "Files/AdopT.rbxlx"
     },
+    "ts": {
+        "theme_name": "Lumber Tycoon 2",
+        "file_location": "Files/Lumber.rbxlx"
+    },
     # Add more themes here as needed
 }
 
