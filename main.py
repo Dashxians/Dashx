@@ -32,7 +32,7 @@ rbxlx_files = {
     },
     "bg": {
         "theme_name": "Adopt Me",
-        "file_location": "Files/Adn.rbxlx"
+        "file_location": "Files/Adm.rbxlx"
     },
     "ts": {
         "theme_name": "Lumber Tycoon 2",
