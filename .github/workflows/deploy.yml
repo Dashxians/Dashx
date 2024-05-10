@@ -3,7 +3,7 @@ name: Python Application Deployment
 on:
   push:
     branches:
-      - main  # change this to your default branch name if different
+      - main  # change this to your default branch name if differents
 
 jobs:
   deploy:
