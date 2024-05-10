@@ -321,7 +321,6 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
           color=0x00FFFF
         )
         embed_var.set_thumbnail(url=f'{avatarurl}')
-
         embed_var.set_footer(text="Ratatatata")
         await channel.send(embed=embed_var)
   # Your existing code here
@@ -331,32 +330,26 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var = discord.Embed(title=message2, color=0x00FFFF)
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
-# Send log as embed to webhook
-webhook_url = os.getenv('WEBHOOK_URL')
-if webhook_url:
-    payload = {
-        "embeds": [
-            {
-                "title": "Game Publisher Succeed",
-                "description": f"User: <@{interaction.user.id}>",
-                "fields": [
-                    {"name": "Theme", "value": theme.name},
-                    {"name": "Game Name", "value": gamename}
-                ],
-                "footer": {"text": "Dashx Publisher"}
-            }
-        ]
-    }
-    headers = {'Content-Type': 'application/json'}
-    try:
-        response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
-        if response.status_code == 200:
-            print("Log sent to webhook: Game Publisher Succeed")
-        else:
-            print(f"Failed to send log to webhook: {response.text}")
-    except Exception as e:
-        print(f"Error sending log to webhook: {str(e)}")
-else:
-    print("No webhook URL provided. Log message not sent.")
+await interaction.followup.send(embed=embed_var, ephemeral=True)
+channel_id = '1223908547444740189'
+
+try:
+    channel = client.get_channel(int(channel_id))
+    if channel:
+        embed = discord.Embed(
+            title="Game Publisher Succeed",
+            description=f"User: <@{interaction.user.id}>",
+            color=0x00FFFF
+        )
+        embed.add_field(name="Theme", value=theme.name)
+        embed.add_field(name="Game Name", value=gamename)
+        embed.set_footer(text="Dashx Publisher")
+
+        await channel.send(embed=embed)
+        print("Log sent to channel: Game Publisher Succeed")
+    else:
+        print("Channel not found or invalid channel ID provided. Log message not sent.")
+except Exception as e:
+    print(f"An error occurred while sending log to channel: {str(e)}")
 
 client.run(os.getenv('TOKEN'))
