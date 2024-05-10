@@ -10,6 +10,7 @@ from webserver import keep_alive
 from discord.ext import commands
 from discord.app_commands.errors import MissingRole
 import psycopg2
+from discord_slash import SlashCommand
 from dotenv import load_dotenv
 load_dotenv()
 
