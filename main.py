@@ -122,7 +122,7 @@ def replace_script_guids(data):
     return cache[guid]
 
   data = re.sub(
-    b"(\{[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\})",
+     b"(\{[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\\})",
     _replace_guid, data)
   return data
 
