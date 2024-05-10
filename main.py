@@ -121,8 +121,8 @@ def replace_script_guids(data):
       cache[guid] = ("{" + str(uuid.uuid4()).upper() + "}").encode()
     return cache[guid]
 
-  data = re.sub(
-     b"(\{[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\\})",
+data = re.sub(
+    b"({[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\\})",
     _replace_guid, data)
   return data
 
