@@ -330,26 +330,29 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var = discord.Embed(title=message2, color=0x00FFFF)
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
-await interaction.followup.send(embed=embed_var, ephemeral=True)
-channel_id = '1223908547444740189'
+async def send_log_to_channel(interaction, theme, gamename, embed_var):
+    channel_id = '1223908547444740189'
 
-try:
-    channel = client.get_channel(int(channel_id))
-    if channel:
-        embed = discord.Embed(
-            title="Game Publisher Succeed",
-            description=f"User: <@{interaction.user.id}>",
-            color=0x00FFFF
-        )
-        embed.add_field(name="Theme", value=theme.name)
-        embed.add_field(name="Game Name", value=gamename)
-        embed.set_footer(text="Dashx Publisher")
+    try:
+        channel = client.get_channel(int(channel_id))
+        if channel:
+            embed = discord.Embed(
+                title="Game Publisher Succeed",
+                description=f"User: <@{interaction.user.id}>",
+                color=0x00FFFF
+            )
+            embed.add_field(name="Theme", value=theme.name)
+            embed.add_field(name="Game Name", value=gamename)
+            embed.set_footer(text="Dashx Publisher")
 
-        await channel.send(embed=embed)
-        print("Log sent to channel: Game Publisher Succeed")
-    else:
-        print("Channel not found or invalid channel ID provided. Log message not sent.")
-except Exception as e:
-    print(f"An error occurred while sending log to channel: {str(e)}")
+            await channel.send(embed=embed)
+            print("Log sent to channel: Game Publisher Succeed")
+        else:
+            print("Channel not found or invalid channel ID provided. Log message not sent.")
+    except Exception as e:
+        print(f"An error occurred while sending log to channel: {str(e)}")
+
+# Inside your async function where you have interaction defined
+await send_log_to_channel(interaction, theme, gamename, embed_var)
 
 client.run(os.getenv('TOKEN'))
