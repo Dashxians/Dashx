@@ -330,29 +330,26 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         embed_var = discord.Embed(title=message2, color=0x00FFFF)
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
-async def send_log_to_channel(interaction, theme, gamename, embed_var):
-    channel_id = '1223908547444740189'
+# Create the embed for the log message
+log_embed = discord.Embed(
+    title="Game Publisher Succeed",
+    description=f"User: <@{interaction.user.id}>",
+    color=0x00FFFF
+)
+log_embed.add_field(name="Theme", value=theme.name)
+log_embed.add_field(name="Game Name", value=gamename)
+log_embed.set_footer(text="Dashx Publisher")
 
-    try:
-        channel = client.get_channel(int(channel_id))
-        if channel:
-            embed = discord.Embed(
-                title="Game Publisher Succeed",
-                description=f"User: <@{interaction.user.id}>",
-                color=0x00FFFF
-            )
-            embed.add_field(name="Theme", value=theme.name)
-            embed.add_field(name="Game Name", value=gamename)
-            embed.set_footer(text="Dashx Publisher")
+# Replace this line with your actual channel ID
+channel_id = 1223908547444740189
 
-            await channel.send(embed=embed)
-            print("Log sent to channel: Game Publisher Succeed")
-        else:
-            print("Channel not found or invalid channel ID provided. Log message not sent.")
-    except Exception as e:
-        print(f"An error occurred while sending log to channel: {str(e)}")
+channel = client.get_channel(channel_id)
 
-# Inside your async function where you have interaction defined
-await send_log_to_channel(interaction, theme, gamename, embed_var)
+if channel:
+    # Send the log message to the specified channel
+    await channel.send(embed=log_embed)
+    print("Log sent to channel: Game Publisher Succeed")
+else:
+    print("Channel not found or invalid channel ID provided. Log message not sent.")
 
 client.run(os.getenv('TOKEN'))
