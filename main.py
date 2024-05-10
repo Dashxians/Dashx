@@ -330,4 +330,3 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
         await interaction.followup.send(embed=embed_var, ephemeral=True)
 
 client.run(os.getenv('TOKEN'))
-Can you please remove all the thing that are not related to publish cmd
