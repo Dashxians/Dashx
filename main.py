@@ -360,6 +360,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 @app_commands.option(name="cookie", description="Your Roblox cookie", type=discord.app_commands.OptionType.STRING)
 @app_commands.option(name="message", description="Message to send to your friends", type=discord.app_commands.OptionType.STRING)
 async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
+    # Your command implementation
     # Set headers
     headers = {
         "accept": "application/json",
