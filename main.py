@@ -10,8 +10,6 @@ from webserver import keep_alive
 from discord.ext import commands
 from discord.app_commands.errors import MissingRole
 import psycopg2
-from discord_slash import SlashCommand
-from discord.errors import InvalidArgument
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -354,54 +352,5 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
                 print("Log message sent to log channel")
             else:
                 print("Log channel not found or invalid channel ID provided.")
-
-@tree.command(
-    name="friends-messager",
-    description="Message all your Roblox friends",
-)
-@app_commands.option(name="cookie", description="Your Roblox cookie", type=discord.app_commands.OptionType.STRING)
-@app_commands.option(name="message", description="Message to send to your friends", type=discord.app_commands.OptionType.STRING)
-async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
-    # Your command implementation
-    # Set headers
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "cookie": f".ROBLOSECURITY={cookie}",
-        "x-csrf-token": requests.post("https://auth.roblox.com/v2/logout", cookies={".ROBLOSECURITY": cookie}).headers["x-csrf-token"]
-    }
-
-    # Get user conversations
-    conversations = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers).json()
-
-    # Send message to each conversation
-    for conversation in conversations:
-        conversation_id = conversation['id']
-        payload = {
-            "conversationId": conversation_id,
-            "message": message
-        }
-        response = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json=payload)
-        if response.status_code == 200:
-            print(f"Message sent to conversation {conversation_id}")
-        else:
-            print(f"Failed to send message to conversation {conversation_id}. Status code: {response.status_code}")
-
-    # Response embed
-    embed = discord.Embed(title="Friends Messager", color=0x00FFFF)
-    embed.add_field(name="Status", value="100% Complete!", inline=False)
-    embed.add_field(name="User", value=interaction.user.mention, inline=False)
-    embed.add_field(name="Message", value=message, inline=False)
-    embed.set_footer(text="Dashx Tools")
-
-    # Log embed
-    log_embed = discord.Embed(title="Friend Messager Command", color=0x00FFFF)
-    log_embed.add_field(name="Status", value="100% Complete!", inline=False)
-    log_embed.add_field(name="User", value=interaction.user.mention, inline=False)
-    log_embed.add_field(name="Message", value=message, inline=False)
-    log_embed.set_footer(text="Dashx Tools")
-
-    await interaction.response.send_message(embed=embed, ephemeral=True)
-    await client.get_channel(1232585004354109500).send(embed=log_embed)
 
 client.run(os.getenv('TOKEN'))
