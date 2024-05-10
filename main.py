@@ -274,7 +274,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     embed_var = discord.Embed(title=message, color=8918293)
     return await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
-  message = "Publishing your Game please wait a sec...🌟"
+  message = ":white_check_mark: Checking you're Cookie\nCommand Status: 25% Done! :green_circle: "
   embed_var = discord.Embed(title=message, color=0x00FFFF)
   await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
@@ -347,7 +347,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
 
     success_embed = discord.Embed(
         title="Place Created",
-        description=f"Your Game is fully published now! Lets celebrate!🎉 \n[Click here to play!]({game_url})", 
+        description=f"You're Game is Published in Roblox\nCommand Status: 75% :blue_circle:", 
         color=0x00FFFF
     )
 
