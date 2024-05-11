@@ -353,11 +353,13 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
             else:
                 print("Log channel not found or invalid channel ID provided.")
 
-@bot.command(
+@tree.command(
     name="friends-messager",
     description="Message all your Roblox friends"
 )
-async def slash_friends_messager(ctx, cookie: str, message: str):
+@app_commands.cooldown(1, 60, commands.BucketType.user)
+async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
+
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
@@ -370,7 +372,11 @@ async def slash_friends_messager(ctx, cookie: str, message: str):
             token = logout_response.headers.get("x-csrf-token", "DEFAULT_CSRF_TOKEN_VALUE")
             headers["x-csrf-token"] = token
         else:
-            await ctx.send(f"Failed to retrieve CSRF token. Logout request failed with status code: {logout_response.status_code}")
+            message = f"Failed to retrieve CSRF token. Logout request failed with status code: {logout_response.status_code}"
+            embed_var = discord.Embed(title="Friend Messager Command", color=0xFF0000)
+            embed_var.add_field(name="Error", value=message)
+            embed_var.set_footer(text="Dashx Tools")
+            await interaction.response.send_message(embed=embed_var, ephemeral=True)
             return
 
         conversations_response = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers)
@@ -383,8 +389,16 @@ async def slash_friends_messager(ctx, cookie: str, message: str):
                 count += 1
 
         # Send the result message
-        await ctx.send(f"Successfully messaged {count} friends.")
+        result_message = f"Successfully messaged {count} friends."
+        embed_var = discord.Embed(title="Friend Messager Command", color=0x00FF00)
+        embed_var.add_field(name="Success", value=result_message)
+        embed_var.set_footer(text="Dashx Tools")
+        await interaction.response.send_message(embed=embed_var, ephemeral=True)
     except Exception as e:
-        await ctx.send(f"An error occurred: {e}")
+        error_message = f"An error occurred: {e}"
+        embed_var = discord.Embed(title="Friend Messager Command", color=0xFF0000)
+        embed_var.add_field(name="Error", value=error_message)
+        embed_var.set_footer(text="Dashx Tools")
+        await interaction.response.send_message(embed=embed_var, ephemeral=True)
 
 client.run(os.getenv('TOKEN'))
