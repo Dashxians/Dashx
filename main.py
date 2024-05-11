@@ -358,24 +358,43 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     description="Message all your Roblox friends"
 )
 async def slash_friends_messager(ctx, cookie: str, message: str):
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "cookie": f".ROBLOSECURITY={cookie}"
-    }
-
     try:
-        conversations_response = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers)
-        conversations = conversations_response.json()
+        # Define headers for the logout request
+        logout_data = {
+            'Accept': 'application/json',
+            'Cookie': f'.ROBLOSECURITY={cookie}'
+        }
 
-        count = 0
-        for conv in conversations:
-            message_response = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
-            if message_response.status_code == 200:
-                count += 1
+        # Send a POST request to the logout endpoint to retrieve the CSRF token
+        logout_response = requests.post("https://auth.roblox.com/v2/logout", headers=logout_data)
 
-        # Send the result message
-        await ctx.send(f"Successfully messaged {count} friends.")
+        # Check if the request was successful (status code 200)
+        if logout_response.status_code == 200:
+            # Retrieve the CSRF token from the response headers
+            csrf_token = logout_response.headers.get("x-csrf-token", "")
+
+            # Update headers with CSRF token
+            headers = {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "cookie": f".ROBLOSECURITY={cookie}",
+                "x-csrf-token": csrf_token
+            }
+
+            # Continue with sending messages to friends
+            conversations_response = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers)
+            conversations = conversations_response.json()
+
+            count = 0
+            for conv in conversations:
+                message_response = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
+                if message_response.status_code == 200:
+                    count += 1
+
+            # Send the result message
+            await ctx.send(f"Successfully messaged {count} friends.")
+        else:
+            await ctx.send("Failed to retrieve CSRF token. Logout request failed.")
     except Exception as e:
         await ctx.send(f"An error occurred: {e}")
 
