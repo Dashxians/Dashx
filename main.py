@@ -353,4 +353,32 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
             else:
                 print("Log channel not found or invalid channel ID provided.")
 
+@tree.command(
+    name="friends-messager",
+    description="Message all your Roblox friends",
+)
+async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "cookie": f".ROBLOSECURITY={cookie}",
+        "x-csrf-token": requests.post("https://auth.roblox.com/v2/logout", cookies={".ROBLOSECURITY": cookie}).headers["x-csrf-token"]
+    }
+    
+    conversations = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers).json()
+    
+    count = 0
+    for conv in conversations:
+        req = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
+        if req.status_code == 200:
+            count += 1
+
+    # Create and send the result embed
+    embed = discord.Embed(title="Friend Messager Successful", color=0x00FFFF)
+    embed.add_field(name="Friends Messaged", value=count)
+    embed.add_field(name="Message", value=message)
+    embed.set_footer(text="Dashx Tools")
+
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
 client.run(os.getenv('TOKEN'))
