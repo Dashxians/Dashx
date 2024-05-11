@@ -358,15 +358,27 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     description="Message all your Roblox friends",
 )
 async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
+    # Retrieve CSRF token
+    csrf_token = get_csrf_token(cookie)
+
+    # Check if CSRF token is available
+    if csrf_token is None:
+        # Handle the case where CSRF token retrieval fails
+        await interaction.response.send_message("Failed to retrieve CSRF token.", ephemeral=True)
+        return
+
+    # Set up headers for the request
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
         "cookie": f".ROBLOSECURITY={cookie}",
-        "x-csrf-token": requests.post("https://auth.roblox.com/v2/logout", cookies={".ROBLOSECURITY": cookie}).headers["x-csrf-token"]
+        "x-csrf-token": csrf_token
     }
-    
+
+    # Make request to get user conversations
     conversations = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers).json()
-    
+
+    # Iterate over conversations and send message
     count = 0
     for conv in conversations:
         req = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
