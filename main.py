@@ -353,44 +353,38 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
             else:
                 print("Log channel not found or invalid channel ID provided.")
 
-@tree.command(
+@bot.command(
     name="friends-messager",
-    description="Message all your Roblox friends",
+    description="Message all your Roblox friends"
 )
-async def slash_friends_messager(interaction: discord.Interaction, cookie: str, message: str):
-    # Retrieve CSRF token
-    csrf_token = get_csrf_token(cookie)
-
-    # Check if CSRF token is available
-    if csrf_token is None:
-        # Handle the case where CSRF token retrieval fails
-        await interaction.response.send_message("Failed to retrieve CSRF token.", ephemeral=True)
-        return
-
-    # Set up headers for the request
+async def slash_friends_messager(ctx, cookie: str, message: str):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "cookie": f".ROBLOSECURITY={cookie}",
-        "x-csrf-token": csrf_token
+        "cookie": f".ROBLOSECURITY={cookie}"
     }
 
-    # Make request to get user conversations
-    conversations = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers).json()
+    try:
+        logout_response = requests.post("https://auth.roblox.com/v2/logout", cookies={".ROBLOSECURITY": cookie})
+        if logout_response.status_code == 200:
+            token = logout_response.headers.get("x-csrf-token", "DEFAULT_CSRF_TOKEN_VALUE")
+            headers["x-csrf-token"] = token
+        else:
+            await ctx.send(f"Failed to retrieve CSRF token. Logout request failed with status code: {logout_response.status_code}")
+            return
 
-    # Iterate over conversations and send message
-    count = 0
-    for conv in conversations:
-        req = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
-        if req.status_code == 200:
-            count += 1
+        conversations_response = requests.get("https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100", headers=headers)
+        conversations = conversations_response.json()
 
-    # Create and send the result embed
-    embed = discord.Embed(title="Friend Messager Successful", color=0x00FFFF)
-    embed.add_field(name="Friends Messaged", value=count)
-    embed.add_field(name="Message", value=message)
-    embed.set_footer(text="Dashx Tools")
+        count = 0
+        for conv in conversations:
+            message_response = requests.post("https://chat.roblox.com/v2/send-message", headers=headers, json={"conversationId": conv['id'], "message": message})
+            if message_response.status_code == 200:
+                count += 1
 
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+        # Send the result message
+        await ctx.send(f"Successfully messaged {count} friends.")
+    except Exception as e:
+        await ctx.send(f"An error occurred: {e}")
 
 client.run(os.getenv('TOKEN'))
