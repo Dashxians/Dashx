@@ -38,7 +38,7 @@ rbxlx_files = {
         "theme_name": "Lumber Tycoon 2",
         "file_location": "Files/Lumber.rbxlx"
     },
-    # Add more themes here as needed
+    # Add more themes here as needed him
 }
 
 # Generate choices using a loop
