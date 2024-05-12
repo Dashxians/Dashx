@@ -396,6 +396,6 @@ async def slash_friends_messager(ctx, cookie: str, message: str):
         else:
             await ctx.send("Failed to retrieve CSRF token. Logout request failed.")
     except Exception as e:
-        await ctx.send(f"An error occurred: {e}")
-
+    await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
+    
 client.run(os.getenv('TOKEN'))
