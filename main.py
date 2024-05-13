@@ -31,7 +31,7 @@ rbxlx_files = {
         "file_location": "Files/Robux Theme Paid V2.rbxlx"
     },
     "bg": {
-        "theme_name": "Adopt ME FIXED",
+        "theme_name": "Adopt me FIXED",
         "file_location": "Files/ADM.rbxlx"
     },
     "ts": {
