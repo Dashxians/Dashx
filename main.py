@@ -154,7 +154,7 @@ def get_game_icon(game_id):
 )
 @app_commands.describe(theme='Choose a Theme')
 @app_commands.choices(theme=theme_choices)
-async def slash_publish(interaction: discord.Interaction, theme: discord.app_commands.Choice[str], cookie: str, gamename: str = None):
+async def slash_publish(interaction: discord.Interaction, theme: discord.app_commands.Choice[str], cookie: str, gamename: str, description: str):
 
     role_name = os.getenv('CUSTUMER_ROLE_NAME')
     guild_id = int(os.getenv("GUILD_ID"))
