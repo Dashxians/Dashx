@@ -31,11 +31,15 @@ rbxlx_files = {
         "file_location": "Files/Robux Theme Paid V2.rbxlx"
     },
     "bg": {
-        "theme_name": "Adopt Me",
-        "file_location": "Files/Adm.rbxlx"
+        "theme_name": "Adopt ME FIXED",
+        "file_location": "Files/ADM.rbxlx"
     },
     "ts": {
         "theme_name": "Lumber Tycoon 2",
+        "file_location": "Files/Lumber.rbxlx"
+    },
+    "dj": {
+        "theme_name": "Robux Theme V3 3D",
         "file_location": "Files/Lumber.rbxlx"
     },
     # Add more themes here as needed him
