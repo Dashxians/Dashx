@@ -243,7 +243,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     )
     code1 = request1.status_code
     Uni_Game_Id = None
-    if code1 == 200:
+if code1 == 200:
     response_body = request1.json()
     game_id = response_body["rootPlaceId"]
     Uni_Game_Id = response_body["universeId"]
@@ -256,6 +256,7 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     )
 
     await interaction.followup.send(embed=success_embed, ephemeral=True)
+
 
     print(f" [DATA] {Uni_Game_Id} - Game Uni-ID")
     if Uni_Game_Id is not None:
