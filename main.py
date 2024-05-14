@@ -39,8 +39,8 @@ rbxlx_files = {
         "file_location": "Files/Lumber.rbxlx"
     },
     "dj": {
-        "theme_name": "Robux Theme V3 3D",
-        "file_location": "Files/3D_robux_theme.rbxlx"
+        "theme_name": "3D - Robux Theme V3",
+        "file_location": "Files/3D roblox theme.rbxlx"
     },
     # Add more themes here as needed him
 }
