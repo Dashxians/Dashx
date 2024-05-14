@@ -103,7 +103,7 @@ tree = discord.app_commands.CommandTree(client)
 @client.event
 async def on_ready():
     await tree.sync()
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Dashx Enterprise'), status=discord.Status.dnd)
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Powered by Dashx'), status=discord.Status.dnd)
     print('Logged in')
     print('------')
     print(client.user.display_name)
