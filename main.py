@@ -243,20 +243,21 @@ async def slash_publish(interaction: discord.Interaction, theme: discord.app_com
     )
     code1 = request1.status_code
     Uni_Game_Id = None
-if code1 == 200:
-    response_body = request1.json()
-    game_id = response_body["rootPlaceId"]
-    Uni_Game_Id = response_body["universeId"]
-    game_url = f"https://www.roblox.com/games/{game_id}/"
+    if code1 == 200:
+        response_body = request1.json()
+        game_id = response_body["rootPlaceId"]
+        Uni_Game_Id = response_body["universeId"]
+        game_url = f"https://www.roblox.com/games/{game_id}/"
 
-    success_embed = discord.Embed(
-        title="Place Created",
-        description=f"You're Game is Published in Roblox\nCommand Status: 75% :blue_circle:",
-        color=0x00FFFF
-    )
+        success_embed = discord.Embed(
+            title="Place Created",
+            description=f"You're Game is Published in Roblox\nCommand Status: 75% :blue_circle:",
+            color=0x00FFFF
+        )
 
-    await interaction.followup.send(embed=success_embed, ephemeral=True)
-
+        await interaction.followup.send(embed=success_embed, ephemeral=True)
+    else:
+        await interaction.followup.send(f"Upload failed with HTTP code {code1}", ephemeral=True)
 
     print(f" [DATA] {Uni_Game_Id} - Game Uni-ID")
     if Uni_Game_Id is not None:
