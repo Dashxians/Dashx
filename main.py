@@ -11,10 +11,8 @@ from discord.ext import commands
 from discord.app_commands.errors import MissingRole
 import psycopg2
 from dotenv import load_dotenv
-load_dotenv()
 
-# ...
-# Import statements and other code
+load_dotenv()
 
 # Define your rbxlx file locations with theme names
 rbxlx_files = {
@@ -42,7 +40,7 @@ rbxlx_files = {
         "theme_name": "3D - Robux Theme V3",
         "file_location": "Files/3D roblox theme.rbxlx"
     },
-    # Add more themes here as needed him
+    # Add more themes here as needed
 }
 
 # Generate choices using a loop
@@ -50,19 +48,20 @@ theme_choices = [
     discord.app_commands.Choice(name=f"{theme_data['theme_name']}", value=theme_code)
     for theme_code, theme_data in rbxlx_files.items()
 ]
-
+# Function to replace referents in data
 def replace_referents(data):
-  cache = {}
+    cache = {}
 
-  def _replace_ref(match):
-    ref = match.group(1)
-    if not ref in cache:
-      cache[ref] = ("RBX" + secrets.token_hex(16).upper()).encode()
-    return cache[ref]
+    def _replace_ref(match):
+        ref = match.group(1)
+        if not ref in cache:
+            cache[ref] = ("RBX" + secrets.token_hex(16).upper()).encode()
+        return cache[ref]
 
-  data = re.sub(b"(RBX[A-Z0-9]{32})", _replace_ref, data)
-  return data
+    data = re.sub(b"(RBX[A-Z0-9]{32})", _replace_ref, data)
+    return data
 
+# Function to replace script GUIDs in data
 def replace_script_guids(data):
     cache = {}
 
@@ -77,7 +76,7 @@ def replace_script_guids(data):
         _replace_guid, data)
     return data
 
-
+# Function to process file based on the key
 def process_file(file_key):
     theme_info = rbxlx_files.get(file_key)
     if not theme_info:
@@ -92,11 +91,12 @@ def process_file(file_key):
 
     return file_data
 
-
+# Define intents
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
+# Initialize client and command tree
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
@@ -107,8 +107,6 @@ async def on_ready():
     print('Logged in')
     print('------')
     print(client.user.display_name)
-
-keep_alive()
 
 def refresh_cookie(c):
     try:
