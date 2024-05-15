@@ -43,7 +43,7 @@ rbxlx_files = {
     # Add more themes here as needed
 }
 
-# Generate choices using a loop
+# Generates choices using a loop
 theme_choices = [
     discord.app_commands.Choice(name=f"{theme_data['theme_name']}", value=theme_code)
     for theme_code, theme_data in rbxlx_files.items()
